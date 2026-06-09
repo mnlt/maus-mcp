@@ -35,10 +35,10 @@
   "homepage": "https://mausformac.com/mcp",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mausformac/maus-mcp.git"
+    "url": "git+https://github.com/mnlt/maus-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/mausformac/maus-mcp/issues"
+    "url": "https://github.com/mnlt/maus-mcp/issues"
   },
   "os": ["darwin"],
   "engines": {
