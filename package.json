@@ -1,0 +1,55 @@
+{
+  "name": "maus-mcp",
+  "version": "1.0.0",
+  "description": "MCP server that exposes Maus.app's clipboard history to Claude Code, Cursor, Codex and other MCP clients. Local-only, tier-aware.",
+  "type": "module",
+  "main": "dist/server.js",
+  "bin": {
+    "maus-mcp": "dist/server.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "supabase_setup.sql"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/server.js",
+    "dev": "tsx server.ts"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "clipboard",
+    "claude",
+    "claude-code",
+    "cursor",
+    "codex",
+    "maus",
+    "macos"
+  ],
+  "author": "Manuel Toledo <manu@mausformac.com>",
+  "license": "MIT",
+  "homepage": "https://mausformac.com/mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mausformac/maus-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mausformac/maus-mcp/issues"
+  },
+  "os": ["darwin"],
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
