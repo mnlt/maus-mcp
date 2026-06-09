@@ -32,7 +32,7 @@
   ],
   "author": "Manuel Toledo <manu@mausformac.com>",
   "license": "MIT",
-  "homepage": "https://mausformac.com/mcp",
+  "homepage": "https://github.com/mnlt/maus-mcp",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mnlt/maus-mcp.git"
