@@ -7,7 +7,7 @@
  *   - "visual" → reduced_image_b64 + image_metadata (no OCR)
  *   - "both"   → ocr_text + reduced_image_b64 + image_metadata (default)
  *
- * OCR text for image items lives in a SIBLING text item created by Maus.app
+ * OCR text for image items lives in a SIBLING text item created by Maus
  * at the same timestamp + source_app (see ClipboardManager.swift ~line 475).
  * We resolve it via that join.
  *

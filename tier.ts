@@ -2,7 +2,7 @@
  * Tier detection for Maus MCP.
  *
  * Reads the user's Maus tier (free or pro) from the same UserDefaults
- * key that Maus.app writes — see TierManager.swift, key "maus_tier".
+ * key that Maus writes — see TierManager.swift, key "maus_tier".
  * Cached at module load: if the user upgrades mid-session, restart
  * the MCP server (in practice, restart Claude Code / Cursor).
  *

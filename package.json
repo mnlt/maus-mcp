@@ -1,7 +1,7 @@
 {
   "name": "maus-mcp",
-  "version": "1.0.0",
-  "description": "MCP server that exposes Maus.app's clipboard history to Claude Code, Cursor, Codex and other MCP clients. Local-only, tier-aware.",
+  "version": "1.0.1",
+  "description": "MCP server exposing the Maus clipboard manager (mausformac.com) to Claude Code, Cursor, Codex and other MCP clients. Local-only, tier-aware.",
   "type": "module",
   "main": "dist/server.js",
   "bin": {
@@ -40,7 +40,9 @@
   "bugs": {
     "url": "https://github.com/mnlt/maus-mcp/issues"
   },
-  "os": ["darwin"],
+  "os": [
+    "darwin"
+  ],
   "engines": {
     "node": ">=20"
   },

@@ -117,7 +117,7 @@ export function add_item(args: AddItemArgs, ctx: AddItemContext = {}): AddItemRe
   const createdAt = new Date().toISOString();
   const pinnedAt = pinned ? createdAt : null;
 
-  // Compute next order_index. Matches DatabaseManager.insert in Maus.app —
+  // Compute next order_index. Matches DatabaseManager.insert in Maus —
   // see DatabaseManager.swift around getMaxOrderIndex().
   const maxIdx = (db.prepare(`SELECT MAX(order_index) AS m FROM items`).get() as { m: number | null }).m ?? 0;
   const orderIndex = maxIdx + 1;

@@ -1,12 +1,12 @@
 /**
- * Shared SQLite connection to Maus.app's history DB.
+ * Shared SQLite connection to Maus's history DB.
  *
  * Opened in read-write mode so that tools that mutate (forget, set_title,
  * add_item) can share the same handle. Read tools work fine on a read-write
  * connection.
  *
  * WAL mode is enabled by Maus itself; concurrent reads/writes between this
- * server and the running Maus.app are safe.
+ * server and the running Maus are safe.
  */
 
 import { DatabaseSync } from "node:sqlite";
@@ -34,7 +34,7 @@ export const db = new DatabaseSync(DB_PATH);
   if (missing.length > 0) {
     throw new Error(
       `Incompatible Maus database. Missing columns: ${missing.join(", ")}. ` +
-      `Update Maus.app or maus-mcp.`,
+      `Update Maus or maus-mcp.`,
     );
   }
 })();

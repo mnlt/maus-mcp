@@ -1,5 +1,5 @@
 /**
- * Lightweight content-pattern inference. Maus.app does its own pattern
+ * Lightweight content-pattern inference. Maus does its own pattern
  * classification at copy time (see copy_events.content_pattern) but that
  * value is not stored on the items table — it lives in the analytics
  * pipeline only. We infer a coarse pattern from the row content here so

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * maus-mcp — MCP server exposing Maus.app's clipboard history.
+ * maus-mcp — MCP server exposing Maus's clipboard history.
  *
  * v1 surface (6 tools):
  *   get         — fetch one item by id, with OCR + reduced image for type=image

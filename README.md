@@ -20,8 +20,8 @@ including OCR text from screenshots.
 
 ## Requirements
 
-- **macOS** (the Maus.app is macOS-only; this MCP reads its local SQLite).
-- **[Maus.app](https://mausformac.com) installed and running.**
+- **macOS** (Maus is macOS-only; this MCP reads its local SQLite).
+- **[Maus](https://mausformac.com)** installed and running.
 - **Node.js ≥ 20**.
 
 ## Install
@@ -83,7 +83,7 @@ an upgrade link so the agent can offer it in context.
 
 - No clipboard content ever leaves your Mac.
 - The server sends anonymous **shape-only telemetry** to the same Supabase
-  the Maus.app already uses (tool name, duration, tier, status — never
+  the Maus already uses (tool name, duration, tier, status — never
   values, queries, or content).
 - To opt out, set `MAUS_MCP_TELEMETRY=off` in your environment.
 
@@ -114,6 +114,6 @@ MAUS_MCP_TIER_OVERRIDE=pro node test_add_item.mjs
 
 ## Links
 
-- [Maus.app](https://mausformac.com)
+- [Maus](https://mausformac.com)
 - [Model Context Protocol](https://modelcontextprotocol.io)
 - [Report a bug](https://github.com/mausformac/maus-mcp/issues)

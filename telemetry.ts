@@ -1,12 +1,12 @@
 /**
  * Telemetry for maus-mcp — shape-only, no clipboard content.
  *
- * Two tables in the same Supabase project Maus.app already uses:
+ * Two tables in the same Supabase project Maus already uses:
  *   - mcp_installs: one row each time the MCP server boots (heartbeat).
  *   - mcp_events:   one row per tool call (tool, tier, duration, status,
  *                   structural arg shape — never values).
  *
- * device_id matches the one Maus.app computes (SHA256 of IOPlatformUUID).
+ * device_id matches the one Maus computes (SHA256 of IOPlatformUUID).
  * This lets us correlate MCP usage with the existing pro_activations,
  * daily_metrics, copy_events etc. tables. Same device, same id.
  *
@@ -30,7 +30,7 @@ const TELEMETRY_DISABLED = (process.env.MAUS_MCP_TELEMETRY ?? "").toLowerCase() 
 let _deviceId: string | null = null;
 
 /**
- * Derive the device_id the same way Maus.app does (DeviceIdentifier.swift):
+ * Derive the device_id the same way Maus does (DeviceIdentifier.swift):
  * SHA256 of the hardware IOPlatformUUID. Cached on first call.
  */
 export function getDeviceId(): string {
