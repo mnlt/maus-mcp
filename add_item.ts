@@ -114,7 +114,12 @@ export function add_item(args: AddItemArgs, ctx: AddItemContext = {}): AddItemRe
 
   const pinned = args.pinned === true;
   const preview = buildPreview(args.content);
-  const createdAt = new Date().toISOString();
+  // Maus stores ISO dates WITHOUT the trailing `Z` (matches what SQLite.swift's
+  // Expression<Date> encoder produces). If we write with Z, Maus's date
+  // parser silently fails on fromRow(), returns id=-1, and the row is filtered
+  // out of fetchRecentItems — the item lands in the DB but never appears in
+  // the UI. Strip the Z to match.
+  const createdAt = new Date().toISOString().replace(/Z$/, "");
   const pinnedAt = pinned ? createdAt : null;
 
   // Compute next order_index. Matches DatabaseManager.insert in Maus —
