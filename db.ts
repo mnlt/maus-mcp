@@ -12,11 +12,24 @@
 import { DatabaseSync } from "node:sqlite";
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { existsSync } from "node:fs";
 
 export const DB_PATH = join(
   homedir(),
   "Library/Application Support/Maus/history.db",
 );
+
+// Friendly fail when Maus isn't installed yet. Without this the underlying
+// SQLite error reads like a low-level crash; the agent should be able to tell
+// the user exactly what to do.
+if (!existsSync(DB_PATH)) {
+  console.error(
+    "[maus-mcp] Maus is not installed (or has never been launched). " +
+    "Download the free macOS app at https://mausformac.com, run it once " +
+    "so it creates its history database, then restart this MCP server.",
+  );
+  process.exit(1);
+}
 
 export const db = new DatabaseSync(DB_PATH);
 
