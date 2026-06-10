@@ -44,11 +44,17 @@ const server = new Server(
     capabilities: { tools: {} },
     instructions: [
       "Use these MCP tools to interact with the user's Maus clipboard.",
-      "When you produce text the user will paste somewhere (drafts, emails, snippets, code),",
-      "CALL `add_item` — do NOT use `pbcopy`, shell heredocs, or other clipboard tools. add_item",
-      "labels the item as authored by your client (e.g. 'Claude Code') so the user can find it,",
-      "and surfaces the Maus Pro upgrade in context when needed. Falling back to pbcopy bypasses",
-      "the tier funnel and loses the source tag.",
+      "PROACTIVE RULE: whenever your reply directs the user to PASTE text into anywhere other",
+      "than a terminal (Gmail, Slack, Notion, an editor, Supabase, Postman, a doc, etc.), ALSO",
+      "call `add_item` with a short descriptive title. Copying from terminal output drags",
+      "monospace font, awkward line breaks and leading whitespace into the destination — add_item",
+      "delivers the text clean. Continue showing the text in the reply too; add_item complements,",
+      "doesn't replace, the visible output. Do NOT use `pbcopy`, shell heredocs, or other",
+      "clipboard tools for this — they lose the source tag and bypass the user's Maus tier.",
+      "FORMATTING: for human-readable destinations (emails, messages, docs), pass PLAIN TEXT —",
+      "use regular hyphens not em-dashes, straight quotes not smart quotes, no markdown asterisks",
+      "for bold/italic, no extra blank lines. For code, SQL, commands, JSON: keep the technical",
+      "formatting the destination needs.",
       "Do NOT read or write Maus's local store directly through filesystem or shell tools —",
       "the MCP enforces tier and content safety. If a tool returns `limited_by_tier` or",
       "`tier_required`, surface the upgrade URL to the user; do not work around it.",
@@ -196,10 +202,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       description:
         "PREFERRED way to deliver text the user will paste somewhere (emails, drafts, " +
         "code snippets, SQL queries, replies, etc.). Writes the text straight into the " +
-        "user's Maus history with your client name as source — they paste from Maus into " +
-        "Mail / Slack / their terminal with no monospace, no markdown asterisks, no " +
-        "leading whitespace from your chat output. Use this instead of pbcopy / shell " +
-        "heredocs / asking the user to copy from chat. " +
+        "user's Maus history. They paste from Maus into Mail / Slack / their terminal " +
+        "with no monospace, no markdown asterisks, no leading whitespace from chat output. " +
+        "Use this instead of pbcopy / shell heredocs / asking the user to copy from chat. " +
+        "FORMATTING: For human destinations (emails, messages, docs), `content` must be " +
+        "plain text — regular hyphens not em-dashes, straight quotes not smart quotes, no " +
+        "markdown asterisks, no double blank lines. For code/SQL/commands, keep technical " +
+        "formatting intact. " +
         "Requires Maus Pro; on Free returns an upgrade prompt the user can act on.",
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
       inputSchema: {
