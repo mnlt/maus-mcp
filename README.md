@@ -29,10 +29,14 @@ including OCR text from screenshots.
 ### Claude Code
 
 ```bash
-claude mcp add maus npx maus-mcp@latest
+claude mcp add -s user maus -- npx maus-mcp@latest
 ```
 
-Open a new Claude Code session and try:
+The `-s user` flag installs Maus globally for your user so it works in every
+project. Without it, the MCP only loads in the directory where you ran the
+command.
+
+Restart Claude Code (close every session, open a new one) and try:
 
 > *"Maus, show me my last 5 clipboard items"*
 
