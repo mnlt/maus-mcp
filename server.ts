@@ -29,14 +29,6 @@ import { search } from "./search.ts";
 import { set_title } from "./set_title.ts";
 import { forget } from "./forget.ts";
 import { add_item } from "./add_item.ts";
-import { getTier } from "./tier.ts";
-import {
-  setClientInfo,
-  trackInstall,
-  trackToolCall,
-  shapeOf,
-  type ToolStatus,
-} from "./telemetry.ts";
 
 const server = new Server(
   { name: "maus", version: "1.0.0" },
@@ -227,42 +219,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 
 // ─── Tool router ──────────────────────────────────────────────────────────
 
-/**
- * Pull the status code (ok / tier_required / not_found / etc.) out of a tool
- * result so we can record it. Tool functions return either a result object
- * or an `{ error: { code } }` object — both shapes are handled here.
- *
- * Success-with-tier-clamp (e.g. list_recent ran but ignored a Pro-only
- * filter) is distinguished from a clean success because that's the funnel
- * signal for the upgrade pitch.
- */
-function statusOf(result: unknown): ToolStatus {
-  if (!result || typeof result !== "object") return "ok";
-  if ("error" in result) {
-    const code = (result as { error: { code?: string } }).error?.code;
-    if (
-      code === "tier_required"
-      || code === "not_found"
-      || code === "not_accessible"
-      || code === "invalid_args"
-      || code === "size_limit_exceeded"
-    ) {
-      return code;
-    }
-    return "error";
-  }
-  if ("limited_by_tier" in result) {
-    return "ok_tier_clamped";
-  }
-  return "ok";
-}
-
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const { name, arguments: args } = req.params;
   const a = (args ?? {}) as Record<string, unknown>;
-
-  const t0 = Date.now();
-  let status: ToolStatus = "ok";
 
   try {
     let result: unknown;
@@ -273,18 +232,8 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       case "search":
         result = search(a as Parameters<typeof search>[0]);
         break;
-      case "get": {
-        const r = get(a as Parameters<typeof get>[0]);
-        status = statusOf(r);
-        trackToolCall({
-          tool: name,
-          tier: getTier(),
-          duration_ms: Date.now() - t0,
-          status,
-          arg_shape: shapeOf(name, a),
-        });
-        return shapeGetResponse(r);
-      }
+      case "get":
+        return shapeGetResponse(get(a as Parameters<typeof get>[0]));
       case "set_title":
         result = set_title(a as Parameters<typeof set_title>[0]);
         break;
@@ -297,38 +246,15 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
         break;
       }
       default:
-        status = "error";
-        trackToolCall({
-          tool: name,
-          tier: getTier(),
-          duration_ms: Date.now() - t0,
-          status,
-          arg_shape: {},
-        });
         return {
           content: [{ type: "text", text: `Unknown tool: ${name}` }],
           isError: true,
         };
     }
-    status = statusOf(result);
-    trackToolCall({
-      tool: name,
-      tier: getTier(),
-      duration_ms: Date.now() - t0,
-      status,
-      arg_shape: shapeOf(name, a),
-    });
     return {
       content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
     };
   } catch (err) {
-    trackToolCall({
-      tool: name,
-      tier: getTier(),
-      duration_ms: Date.now() - t0,
-      status: "error",
-      arg_shape: shapeOf(name, a),
-    });
     return {
       content: [{ type: "text", text: `Error: ${(err as Error).message}` }],
       isError: true,
@@ -366,12 +292,3 @@ function shapeGetResponse(result: ReturnType<typeof get>) {
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
-
-// Wait a tick so the initialize handshake completes, then read the client
-// info and fire the install heartbeat. clientInfo isn't populated until the
-// peer sends `initialize` — see SDK Server._clientVersion.
-setTimeout(() => {
-  const ci = server.getClientVersion();
-  setClientInfo({ name: ci?.name, version: ci?.version });
-  trackInstall(getTier());
-}, 500);

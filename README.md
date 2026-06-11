@@ -85,31 +85,17 @@ an upgrade link so the agent can offer it in context.
 
 ## Privacy
 
-- No clipboard content ever leaves your Mac.
-- The server sends anonymous **shape-only telemetry** to the same Supabase
-  the Maus already uses (tool name, duration, tier, status — never
-  values, queries, or content).
-- To opt out, set `MAUS_MCP_TELEMETRY=off` in your environment.
+Local-only. The server reads and writes Maus's SQLite file on your Mac;
+no clipboard content, queries, or metadata leave your machine.
 
 ## Development
 
 ```bash
-git clone https://github.com/mausformac/maus-mcp.git
+git clone https://github.com/mnlt/maus-mcp.git
 cd maus-mcp
 npm install
 npm run dev    # run with tsx (live TypeScript)
 npm run build  # compile to dist/
-```
-
-Manual testing without an MCP client:
-
-```bash
-node test_get.mjs
-node test_list_recent.mjs
-node test_search.mjs
-node test_set_title.mjs
-node test_forget.mjs
-MAUS_MCP_TIER_OVERRIDE=pro node test_add_item.mjs
 ```
 
 ## License
