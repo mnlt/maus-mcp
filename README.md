@@ -85,11 +85,12 @@ an upgrade link so the agent can offer it in context.
 
 ## Privacy
 
-- No clipboard content ever leaves your Mac.
-- The server sends anonymous **shape-only telemetry** to the same Supabase
-  the Maus already uses (tool name, duration, tier, status — never
-  values, queries, or content).
-- To opt out, set `MAUS_MCP_TELEMETRY=off` in your environment.
+Maus MCP does not send your clipboard content anywhere. No queries, no
+titles, no text from items.
+
+The server does report anonymous usage shape (which tool was called, how
+long it took, your Maus tier) so the maintainer can see what's used and
+what's broken. Opt out with `MAUS_MCP_TELEMETRY=off`.
 
 ## Development
 
