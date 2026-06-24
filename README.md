@@ -1,4 +1,4 @@
-[![repotato](https://repotato.sh/api/badge/frkak-piyaz??v=5)](https://repotato.sh/p/frkak-piyaz)
+[![repotato](https://repotato.sh/api/badge/frkak-piyaz??v=6)](https://repotato.sh/p/frkak-piyaz)
 
 # maus-mcp
 
