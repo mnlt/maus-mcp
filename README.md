@@ -1,3 +1,5 @@
+[![repotato](https://repotato.sh/api/badge/frkak-piyaz)](https://repotato.sh/p/frkak-piyaz)
+
 # maus-mcp
 
 MCP server that gives Claude Code, Cursor, Codex and other MCP clients
