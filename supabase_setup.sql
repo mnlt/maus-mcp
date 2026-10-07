@@ -36,6 +36,13 @@ CREATE INDEX IF NOT EXISTS mcp_events_device_id_idx ON public.mcp_events (device
 CREATE INDEX IF NOT EXISTS mcp_events_ts_idx        ON public.mcp_events (ts DESC);
 CREATE INDEX IF NOT EXISTS mcp_events_tool_idx      ON public.mcp_events (tool);
 
+-- 1.0.5: first start per client, dev runs, once per occurrence, in order
+-- (same as Maus's db/migrations/2.4.8_betty_measure.sql section 6).
+ALTER TABLE public.mcp_installs ADD COLUMN IF NOT EXISTS first_start BOOLEAN, ADD COLUMN IF NOT EXISTS internal BOOLEAN, ADD COLUMN IF NOT EXISTS client_event_id UUID, ADD COLUMN IF NOT EXISTS seq BIGINT, ADD COLUMN IF NOT EXISTS seq_epoch UUID;
+ALTER TABLE public.mcp_events ADD COLUMN IF NOT EXISTS internal BOOLEAN, ADD COLUMN IF NOT EXISTS client_event_id UUID, ADD COLUMN IF NOT EXISTS seq BIGINT, ADD COLUMN IF NOT EXISTS seq_epoch UUID;
+CREATE UNIQUE INDEX IF NOT EXISTS mcp_installs_client_event_id_key ON public.mcp_installs (client_event_id);
+CREATE UNIQUE INDEX IF NOT EXISTS mcp_events_client_event_id_key ON public.mcp_events (client_event_id);
+
 -- ───────────────────────────────────────────────────────────────
 -- Row Level Security
 -- The publishable key (anon role) must be able to INSERT and ONLY INSERT.
