@@ -1,4 +1,4 @@
-// Betty's measurement. Made by Betty for Maus: when Betty gives a new one, replace this file whole.
+// Betty's measurement. Made by Betty for Maus: when Betty gives a new one, replace this file whole. (betty-helper 2)
 //
 // Every event goes to one place, `betty_track` in the product's database (schema `betty`). The names are closed
 // lists: a feature, journey or offer that isn't in them doesn't type-check. Never blocks and never throws: in a
@@ -20,8 +20,9 @@ export type Gate = "add_item_pro_only" | "history_retention_24h_mcp" | "mcp_filt
 
 declare const process: { env: Record<string, string | undefined> }; // a build variable, when there is one
 
-/** Who did it. In a browser Betty remembers it (identify); on a server, pass it with every call. */
-export type Who = { actor?: string; anonymous?: string };
+/** Who did it (in a browser Betty remembers it, identify; on a server, pass it with every call), and what an earlier call here carried besides (an
+ *  order's id, a figure): kept, so nothing it said is lost. */
+export type Who = { actor?: string; anonymous?: string; extra?: Record<string, string | number | boolean> };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const w = globalThis as any; // the browser's window, when there is one: no DOM types needed
@@ -87,7 +88,10 @@ async function flush(): Promise<void> {
 }
 if (browser) { setInterval(() => void flush(), 60_000); w.addEventListener("online", () => void flush()); }
 
-function send(event: string, properties: Record<string, string>, who?: Who): Promise<void> {
+function send(event: string, fixed: Record<string, string>, who?: Who): Promise<void> {
+  const { anonymous_id: joined, ...extra } = (who?.extra ?? {}) as Record<string, unknown>; // an order's "order:<id>", as the payment's server says it
+  if (typeof joined === "string" && !who?.anonymous) who = { ...who, anonymous: joined };
+  const properties: Record<string, unknown> = { ...extra, ...fixed }; // what the call says by name wins
   const actor = who?.actor ?? store.get("betty_actor_id") ?? undefined;
   const p: Payload = {
     p_event: event, p_occurred_at: new Date().toISOString(), p_properties: properties, p_message_id: uuid(),
@@ -102,7 +106,7 @@ function send(event: string, properties: Record<string, string>, who?: Who): Pro
 
 export const betty = {
   /** When set, events go here instead of the network (tests). */
-  sink: undefined as undefined | ((event: string, properties: Record<string, string>) => void),
+  sink: undefined as undefined | ((event: string, properties: Record<string, unknown>) => void),
 
   /** The product's own id for the device, once it is known (in a browser; on a server pass `{ actor }` instead). */
   identify(actorId: string) { store.set("betty_actor_id", actorId); },
