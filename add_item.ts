@@ -22,7 +22,6 @@
 import { db } from "./db.ts";
 import { isPro } from "./tier.ts";
 import { getDeviceId } from "./telemetry.ts";
-import { betty } from "./betty.ts";
 
 const MAX_CONTENT_BYTES = 1024 * 1024; // 1 MB
 const MAX_TITLE_LEN = 200;
@@ -74,8 +73,6 @@ function buildPreview(text: string): string {
 export function add_item(args: AddItemArgs, ctx: AddItemContext = {}): AddItemResult {
   // Pro gate first. Verbalise the upgrade pitch in the agent's response.
   if (!isPro()) {
-    void betty.limitHit("add_item_pro_only", { actor: getDeviceId() });
-    void betty.offerViewed("mcp_upgrade_url", { actor: getDeviceId() });
     return {
       error: {
         code: "tier_required",

@@ -38,7 +38,6 @@ import {
   getDeviceId,
   type ToolStatus,
 } from "./telemetry.ts";
-import { betty } from "./betty.ts";
 
 const server = new Server(
   { name: "maus", version: "1.0.0" },
@@ -255,8 +254,8 @@ function statusOf(result: unknown): ToolStatus {
   }
   if ("limited_by_tier" in result) {
     const blocked = (result as { limited_by_tier: { features_blocked?: string[] } }).limited_by_tier?.features_blocked ?? [];
-    if (blocked.includes("since>24h")) void betty.limitHit("history_retention_24h_mcp", { actor: getDeviceId() });
-    if (blocked.some((f) => f !== "since>24h")) void betty.limitHit("mcp_filters", { actor: getDeviceId() });
+    if (blocked.includes("since>24h")) void 0;
+    if (blocked.some((f) => f !== "since>24h")) void 0;
     return "ok_tier_clamped";
   }
   return "ok";
@@ -299,7 +298,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       case "add_item": {
         const clientName = server.getClientVersion()?.name;
         result = add_item(a as Parameters<typeof add_item>[0], { clientName });
-        if (!("error" in (result as object))) void betty.used("add_item", { actor: getDeviceId() });
+        if (!("error" in (result as object))) void 0;
         break;
       }
       default:
@@ -380,6 +379,4 @@ setTimeout(() => {
   const ci = server.getClientVersion();
   setClientInfo({ name: ci?.name, version: ci?.version });
   trackInstall(getTier());
-  void betty.changed("install_mcp", "installed", { actor: getDeviceId() });
-  void betty.used("install_mcp", { actor: getDeviceId() });
 }, 500);

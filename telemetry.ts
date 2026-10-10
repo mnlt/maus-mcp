@@ -19,7 +19,6 @@
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { betty } from "./betty.ts";
 
 const SUPABASE_URL = "https://nxvibvrbhcdwhhefzyej.supabase.co/rest/v1";
 const SUPABASE_KEY = "sb_publishable_pxHcqc5STbL6lmqspvlOcQ_ztal72Lw";
@@ -154,7 +153,6 @@ export function trackToolCall(params: {
     mcp_version: MCP_VERSION,
     ts: new Date().toISOString(),
   });
-  void betty.used("call_tool", { actor: getDeviceId() });
 }
 
 /**
